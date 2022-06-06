@@ -2,7 +2,7 @@
 ob_start();
 session_start();
 include_once "common/header.php";
-include_once "includes/db.php";
+include_once "./includes/db.php";
 //checking if the user is logged in
 $userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SESSION["user"]["id"] : 0;
 ?>
@@ -17,7 +17,7 @@ $userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SES
         <!-- Get User's contacts from database: -->
         <?php
         if (!empty($userId)) {
-            $contactsSql = "SELECT * FROM `contacts` WHERE `owner_id`=$userId ORDER BY first_name ASC LIMIT 0,10";
+            $contactsSql = "SELECT * FROM `contacts` WHERE `owner_id`=$userId ORDER BY id ASC LIMIT 0,10";
             $conn = db_connect();
             $contactsResult = mysqli_query($conn, $contactsSql);
             $contactsRows = mysqli_num_rows($contactsResult);
@@ -56,13 +56,19 @@ $userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SES
         <nav>
             <ul class="pagination justify-content-center">
                 <li class="page-item  disabled">
-                    <a class="page-link" href="/contactbook/index.php?page=0">Previous</a>
+                    <a class="page-link" href="">Previous</a>
                 </li>
-                <li class="page-item active"><a class="page-link" href="/contactbook/index.php?page=1">1</a></li>
-                <li class="page-item"><a class="page-link" href="/contactbook/index.php?page=2">2</a></li>
+                <li class="page-item active"><a class="page-link" href="
+                <!-- /contactbook/index.php?page=1 -->
+                ">1</a></li>
+                <li class="page-item"><a class="page-link" href="
+                <!-- /contactbook/index.php?page=2 -->
+                ">2</a></li>
 
                 <li class="page-item">
-                    <a class="page-link" href="/contactbook/index.php?page=2">Next</a>
+                    <a class="page-link" href="
+                    <!-- /contactbook/index.php?page=2 -->
+                    ">Next</a>
                 </li>
             </ul>
         </nav>

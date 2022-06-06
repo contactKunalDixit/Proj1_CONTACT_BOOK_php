@@ -1,0 +1,11 @@
+/* .wrapper {
+	padding-top: 30px;
+} */
+
+.navbar-brand {
+	margin: 8px 16px;
+}
+
+main > .wrapper {
+	padding-top: 30px;
+}

@@ -3,8 +3,15 @@ ob_start();
 session_start();
 include_once "common/header.php";
 include_once "./includes/db.php";
+
 //checking if the user is logged in
-$userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SESSION["user"]["id"] : 0;
+
+if ((!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"]))) {
+    $userId = $_SESSION["user"]["id"];
+} else {
+    $userId = 0;
+    header("location:" . SITE_URL . "login.php");
+}
 ?>
 
 
@@ -48,30 +55,16 @@ $userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SES
 
                     </tbody>
                 </table>
+                <?php
+                include_once "./includes/config.php";
+                getPagination($contactsRows);
+                ?>
         <?php
             }
         }
         ?>
 
-        <nav>
-            <ul class="pagination justify-content-center">
-                <li class="page-item  disabled">
-                    <a class="page-link" href="">Previous</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="
-                <!-- /contactbook/index.php?page=1 -->
-                ">1</a></li>
-                <li class="page-item"><a class="page-link" href="
-                <!-- /contactbook/index.php?page=2 -->
-                ">2</a></li>
 
-                <li class="page-item">
-                    <a class="page-link" href="
-                    <!-- /contactbook/index.php?page=2 -->
-                    ">Next</a>
-                </li>
-            </ul>
-        </nav>
     </main>
     <?php include_once "common/footer.php"; ?>
 </body>

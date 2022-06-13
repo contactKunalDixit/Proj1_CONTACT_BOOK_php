@@ -43,9 +43,11 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && !empty($_SESSION["user"])) {
     // Address Validation
 
     $address = test_input($_POST["address"]);
-    // if (!preg_match('/^(?:\\d+ [a-zA-Z ]+, ){2}[a-zA-Z ]+$/', $input)) {
-    //     $errors[] = "Not a Valid Address";
-    // }
+
+
+    $contactid = !empty($_POST["contactid"]) ? $_POST["contactid"] : "";
+    // contactid has been picked/ referenced from 'addContact.php'
+
 
 
     if (!empty($errors)) {
@@ -91,7 +93,21 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && !empty($_SESSION["user"])) {
         && !empty($_SESSION["user"]["id"])
     ) ? $_SESSION["user"]["id"] : 0;
 
-    $sql = "INSERT INTO `contacts` (first_name, last_name, email,phone,
+    if (!empty($contactid)) {
+        // update existing record
+        $sql = "UPDATE `contacts` SET first_name = '{$firstName}', 
+        last_name = '{$lastName}', 
+        email = '{$email}',
+        phone = '{$phone}',
+        address = '{$address}' 
+        -- owner_id should not be updated as it'll owner will always remain the same
+        WHERE id = {$contactid} AND owner_id = '{$ownerID}'
+        )";
+        $message = "Contact has been UPDATED successfully";
+    } else {
+
+        // Add new record
+        $sql = "INSERT INTO `contacts` (first_name, last_name, email,phone,
     address
         ,
         photo,
@@ -103,12 +119,16 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && !empty($_SESSION["user"])) {
         '{$photoName}',
         '{$ownerID}'
         )";
+        $message = "New Contact has been ADDED successfully";
+    }
+
+
 
     $conn = db_connect();
     if (mysqli_query($conn, $sql)) {
         db_close($conn);
         echo $uploadFileDir;
-        $message = "New Contact has been added successfully";
+
         $_SESSION["success"] = $message;
 
         header("location:" . SITE_URL);

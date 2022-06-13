@@ -6,6 +6,8 @@ include_once "./includes/db.php";
 
 // Checking if the user is loggedIn:
 
+$error_msg = '';
+
 if (!empty($_SESSION["user"])) {
     $userId = $_SESSION["user"]["id"];
 } else {
@@ -16,21 +18,22 @@ if (!empty($_SESSION["user"])) {
 
 $userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SESSION["user"]["id"] : 0;
 $contactId = $_GET["id"];
+
 if (!empty($contactId) && is_numeric($contactId)) {
     $conn = db_connect();
     $contact_Id = mysqli_real_escape_string($conn, $contactId);
-    $sql = "SELECT * FROM `contacts` WHERE `id` = {$contact_Id}AND `owner_id` = {$userId}";
-    $sqlResult = mysqli_query($conn, $sql);
+    $sqlQuery = "SELECT * FROM `contacts` WHERE `id` = {$contact_Id} AND `owner_id`={$userId}";
+    //Selects results
+    $sqlResult = mysqli_query($conn, $sqlQuery);
     $rows = mysqli_num_rows($sqlResult);
     if ($rows > 0) {
         $contactResult = mysqli_fetch_assoc($sqlResult);
     } else {
-        echo "Record doesnt Exists.";
-        exit();
+        $error_msg = "Record doesnt Exists.";
     }
+    db_close($conn);
 } else {
-    echo "Invalid contact ID";
-    exit();
+    $error_msg = "Invalid contact ID";
 }
 
 
@@ -40,6 +43,12 @@ if (!empty($contactId) && is_numeric($contactId)) {
     <?php include_once "common/navigation.php" ?>
 
     <main role="main" class="container">
+
+        <?php
+        if (!empty($error_msg)) {
+            echo '<div class = "alert alert-danger text-center mt-2">' . $error_msg . '</div>';
+        } else {
+        ?>
 
         <div class="row justify-content-center wrapper">
             <div class="col-md-6">
@@ -57,13 +66,24 @@ if (!empty($contactId) && is_numeric($contactId)) {
                                 <div class="col-sm-6 col-md-8">
                                     <h4 class="text-primary">
                                         <?php
-                                        echo $contactResult['first_name'] . " " . $contactResult['last_name']
-                                        ?>
+                                            echo $contactResult['first_name'] . " " . $contactResult['last_name'];
+                                            ?>
                                     </h4>
                                     <p class="text-secondary">
-                                        <i class="fa fa-envelope-o" aria-hidden="true"></i> deepak@gmail.com<br />
-                                        <i class="fa fa-phone" aria-hidden="true"></i> 9776655444<br />
-                                        <i class="fa fa-map-marker" aria-hidden="true"></i> Delhi
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        <?php
+                                            echo $contactResult["email"];
+                                            ?>
+                                        <br />
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                        <?php
+                                            echo $contactResult["phone"]
+                                            ?>
+                                        <br />
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        <?php
+                                            echo $contactResult["address"];
+                                            ?>
                                     </p>
                                     <!-- Split button -->
                                 </div>
@@ -76,6 +96,7 @@ if (!empty($contactId) && is_numeric($contactId)) {
             </div>
 
         </div>
+        <?php } ?>
 
     </main>
     <?php include_once "common/footer.php"; ?>

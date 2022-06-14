@@ -39,7 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // If no errors
 
     if (!empty($email) && !empty($password)) {
-        // echo $email . $password;
 
         $conn = db_connect();
         $sanitizeEmail = mysqli_real_escape_string($conn, $email);

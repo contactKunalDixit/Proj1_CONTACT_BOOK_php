@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!empty($errors)) {
         $_SESSION["errors"] = $errors; //Setting a session variable
-        header("location:" . SITE_URL . "sign_up.php"); //Redirects to the Login page;
+        header("location:" . SITE_URL . "sign_up.php"); //Redirects to the Sign_up page;
         exit();
     }
 
@@ -89,9 +89,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     $sql = "INSERT INTO `users` (first_name, last_name, email,password) VALUES ('{$firstName}', '{$lastName}', '{$email}','{$passwordHash}')";
-
-
     $conn = db_connect();
+
+
     if (mysqli_query($conn, $sql)) {
         db_close($conn);
         $message = "You are registered successfully";

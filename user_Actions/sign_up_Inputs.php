@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (mysqli_query($conn, $sql)) {
         db_close($conn);
-        $message = "You are registered successfully";
+        $message = "You are registered successfully. Please proceeed to the LOGIN Page";
         $_SESSION["success"] = $message;
         header("location:" . SITE_URL . "sign_up.php");
         exit();

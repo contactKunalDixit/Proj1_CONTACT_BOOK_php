@@ -1,6 +1,8 @@
 <?php
+ob_start();
+session_start();
 include_once "common/header.php";
-include_once "./includes/db.php";
+include_once "includes/db.php";
 
 if (empty($_SESSION["user"])) {
     header("location:" . SITE_URL . "login.php");
@@ -8,7 +10,9 @@ if (empty($_SESSION["user"])) {
 }
 $userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SESSION["user"]["id"] : 0;
 
-$contactId = !empty($_GET["id"]) ? $_GET["id"] : ""; //1st time It'll be blkank but next time onwards it can be used for identifying while editing a contact
+$contactId = !empty($_GET["id"]) ? $_GET["id"] : "";
+
+//1st time It'll be blkank but next time onwards it can be used for identifying which Item to target, while editing a contact
 
 if (!empty($contactId) && is_numeric($contactId)) {
     $conn = db_connect();
@@ -18,7 +22,7 @@ if (!empty($contactId) && is_numeric($contactId)) {
     $sqlResult = mysqli_query($conn, $sqlQuery);
     $rows = mysqli_num_rows($sqlResult);
     if ($rows > 0) {
-        $contactResult = mysqli_fetch_assoc($sqlResult);
+        $contact = mysqli_fetch_assoc($sqlResult);
     } else {
         $error_msg = "Error retrieving the contact details";
     }
@@ -30,11 +34,11 @@ if (!empty($contactId) && is_numeric($contactId)) {
 
 // Checking below that if the value is being fetched from DB, then that value will appear, else, it'll be blank so that new value can be entrered by user when he's adding a new contact in the records.
 
-$first_name = (!empty($contactResult) && !empty($contactResult["first_name"])) ? $contactResult["first_name"] : "";
-$last_name = (!empty($contactResult) && !empty($contactResult["last_name"])) ? $contactResult["last_name"] : "";
-$email = (!empty($contactResult) && !empty($contactResult["email"])) ? $contactResult["email"] : "";
-$phone = (!empty($contactResult) && !empty($contactResult["phone"])) ? $contactResult["phone"] : "";
-$address = (!empty($contactResult) && !empty($contactResult["address"])) ? $contactResult["address"] : "";
+$first_name = (!empty($contact) && !empty($contact["first_name"])) ? $contact["first_name"] : "";
+$last_name = (!empty($contact) && !empty($contact["last_name"])) ? $contact["last_name"] : "";
+$email = (!empty($contact) && !empty($contact["email"])) ? $contact["email"] : "";
+$phone = (!empty($contact) && !empty($contact["phone"])) ? $contact["phone"] : "";
+$address = (!empty($contact) && !empty($contact["address"])) ? $contact["address"] : "";
 
 
 ?>
@@ -89,9 +93,13 @@ $address = (!empty($contactResult) && !empty($contactResult["address"])) ? $cont
                                     <label class="custom-file-label" for="contact_photo">Choose file</label>
                                 </div>
                             </div>
+
+                            <!-- The type is set to hidden so that it will not be visible to the user, But the form tag will be also be submitting this value at submission -->
                             <div class="form-group">
                                 <input type="hidden" name="contactid" value="<?php echo $contactId ?>" />
-                                <!-- 1st time It'll be blkank but next time onwards it can be used for identifying while editing a contact. It'll not be visible since Its hidden -->
+                                <!-- 1st time It'll be blkank but next time onwards it can be used for identifying while editing a contact. 
+                                Open SOurce code to see the value that this picks. This is also how the system identifies if the the new record is being added OR an old record is being modified. In case if the new record is being added, the value will always be blank
+                            -->
                                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
                             </div>
                         </form>
@@ -113,9 +121,7 @@ $address = (!empty($contactResult) && !empty($contactResult["address"])) ? $cont
                     unset($_SESSION["errors"]);
                 } ?>
             </div>
-
         </div>
-
     </main>
     <?php include_once "common/footer.php" ?>
 </body>

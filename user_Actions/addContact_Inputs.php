@@ -99,10 +99,9 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && !empty($_SESSION["user"])) {
         last_name = '{$lastName}', 
         email = '{$email}',
         phone = '{$phone}',
-        address = '{$address}' 
-        -- owner_id should not be updated as it'll owner will always remain the same
-        WHERE id = {$contactid} AND owner_id = '{$ownerID}'
-        )";
+        address = '{$address}' WHERE `id`={$contactid} AND owner_id = {$ownerID}
+        ";
+        // -- owner_id should not be updated as it'll owner will always remain the same
         $message = "Contact has been UPDATED successfully";
     } else {
 
@@ -119,21 +118,19 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && !empty($_SESSION["user"])) {
         '{$photoName}',
         '{$ownerID}'
         )";
-        $message = "New Contact has been ADDED successfully";
+        $message = "New Contact has been Added successfully";
     }
 
 
 
     $conn = db_connect();
     if (mysqli_query($conn, $sql)) {
-        db_close($conn);
-        echo $uploadFileDir;
-
         $_SESSION["success"] = $message;
-
         header("location:" . SITE_URL);
+
         exit();
     } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        echo "Error: " . "<br>" . mysqli_error($conn);
     }
+    db_close($conn);
 }

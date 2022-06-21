@@ -22,6 +22,16 @@ if ((!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"]))) {
 
 
     <main role="main" class="container">
+        <?php
+        if (!empty($_SESSION["success"])) {
+
+            echo "<div class='alert alert-success text-center'>";
+            echo "<h4>" . $_SESSION["success"] . "</h4>";
+            echo "</div>";
+        }
+        ?>
+        <?php unset($_SESSION["success"]); ?>
+        <!-- To clear the session variables for the next time. On UI, this'll clear the previous success/error messages -->
 
         <!-- Get User's contacts from database: -->
         <?php

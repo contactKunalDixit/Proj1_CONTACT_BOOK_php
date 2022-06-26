@@ -64,8 +64,8 @@ if ((!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"]))) {
                             class="btn btn-success">View</a>
                         <a href="<?php echo SITE_URL . 'addContact.php?id=' . $rows["id"]; ?> "
                             class="btn btn-primary">Edit</a>
-                        <a href="/contactbook/delete.php?id=9" class="btn btn-danger"
-                            onclick="return confirm(`Are you sure want to delete this contact?`)">Delete</a>
+                        <a href="<?php echo SITE_URL . 'delete.php?id=' . $rows["id"]; ?>" class="btn btn-danger"
+                            onclick="return confirm(`Are you sure, You want to delete this contact?`)">Delete</a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -74,6 +74,8 @@ if ((!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"]))) {
         </table>
 
         <?php
+            } else {
+                echo "<div class = 'alert alert-danger text-center mt5'><h5>No Contacts has been added yet. Please proceed to add some contacts</h5></div>";
             }
         }
         ?>

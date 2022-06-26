@@ -1,8 +1,17 @@
 <?php
 
 include_once "common/header.php";
+include_once "includes/db.php";
+if (empty($_SESSION["user"])) {
+    $currentPage = !empty($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : "";
+    $_SESSION["request_url"] = $currentpage;
+    header("location:" . SITE_URL . "login.php");
+    exit();
+}
+$userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SESSION["user"]["id"] : 0;
 
 ?>
+
 
 <body>
     <?php require_once "common/navigation.php" ?>
@@ -21,51 +30,44 @@ include_once "common/header.php";
 
                 <div class="card">
                     <header class="card-header">
-                        <h4 class="card-title mt-2">Sign up</h4>
+                        <h4 class="card-title mt-2">Change Password</h4>
                     </header>
                     <article class="card-body">
-                        <form method="post" action="<?php echo (SITE_URL . 'user_Actions/sign_up_Inputs.php') ?>">
-                            <div class="form-row">
-                                <div class="col form-group">
-                                    <label>First name </label>
-                                    <input type="text" name="fname" class="form-control" placeholder="First Name">
-                                </div> <!-- form-group end.// -->
-                                <div class="col form-group">
-                                    <label>Last name</label>
-                                    <input type="text" name="lname" class="form-control" placeholder="Last Name">
-                                </div> <!-- form-group end.// -->
-                            </div> <!-- form-row end.// -->
+                        <form method="post"
+                            action="<?php echo (SITE_URL . 'user_Actions/update_password_Inputs.php') ?>">
+
                             <div class="form-group">
-                                <label>Email address</label>
-                                <input type="text" name="email" class="form-control" placeholder="">
-                                <small class="form-text text-muted">We'll never share your email with anyone
-                                    else.</small>
+                                <label>Current Password</label>
+                                <input type="password" name=" old_password" class="form-control"
+                                    placeholder="Old password">
+
+                            </div>
+
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" name=" new_password" class="form-control"
+                                    placeholder="New password">
+
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
-                                <input class="form-control" type="password" name="password">
+                                <label>Confirm New Password</label>
+                                <input type="password" name=" confirm_password" class="form-control"
+                                    placeholder="confirm password">
+
                             </div>
                             <div class="form-group">
-                                <label>Confirm Password</label>
-                                <input class="form-control" type="password" name="cpassword">
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" name="InputBtn" class="btn btn-primary btn-block"
-                                    value="Register" />
+                                <input type="submit" name="InputBtn" class="btn btn-success btn-block" value="Update" />
                             </div>
 
                         </form>
                     </article>
-                    <div class="border-top card-body text-center">Have an account?
-                        <a href="<?php echo SITE_URL . 'login.php' ?>">Log In
-                        </a>
-                    </div>
+
                 </div>
                 <?php
                 if (!empty($_SESSION["success"])) {
 
                     echo "<div class='alert alert-success text-center'>";
-                    echo "<h4>" . $_SESSION["success"] . "</h4>";
+                    echo "<h5>" . $_SESSION["success"] . "</h5>";
                     echo "</div>";
                 }
                 ?>

@@ -1,8 +1,13 @@
 <?php
+ob_start();
+session_start();
 include_once "common/header.php";
 require_once "includes/db.php";
 if (empty($_SESSION["user"])) // Profile can only be viewed after being logged in. If not,then REDIRECT to Login page
 {
+    $currentPage = !empty($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : "";
+    $_SESSION["request_url"] = $currentpage;
+
     header("location:" . SITE_URL . "login.php");
     exit();
 }
@@ -17,6 +22,7 @@ if (mysqli_num_rows($sqlResult) > 0) {
     echo "User not found";
     exit();
 }
+
 ?>
 
 <body>
@@ -35,9 +41,11 @@ if (mysqli_num_rows($sqlResult) > 0) {
                                     <img src="http://placehold.it/100x100" alt="" class="rounded-circle" />
                                 </div>
                                 <div class="col-sm-6 col-md-8">
-                                    <h4 class="text-primary"><?php echo  $userInfo['first_name'] . " "  . $userInfo['last_name'] ?></h4>
+                                    <h4 class="text-primary">
+                                        <?php echo  $userInfo['first_name'] . " "  . $userInfo['last_name'] ?></h4>
                                     <p class="text-secondary">
-                                        <i class="fa fa-envelope-o" aria-hidden="true"></i> <?php echo  $userInfo['email'] ?> <br />
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        <?php echo  $userInfo['email'] ?> <br />
                                     </p>
                                     <!-- Split button -->
                                 </div>
@@ -50,7 +58,14 @@ if (mysqli_num_rows($sqlResult) > 0) {
             </div>
 
         </div> <!-- row.//-->
-
+        <?php
+        if (!empty($_SESSION["success"])) {
+            echo "<div class = 'alert alert-success text-center mt-5'>";
+            echo "<h5>" . $_SESSION["success"] . "</h5>";
+            echo "</div>";
+        }
+        unset($_SESSION["success"]);
+        ?>
     </main>
 
     <?php include_once "common/footer.php" ?>

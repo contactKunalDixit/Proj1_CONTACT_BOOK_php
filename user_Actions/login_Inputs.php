@@ -53,8 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     unset($userInfo["password"]);
                     //This has been unset because we dont want to carry password in through SESSIONs variables. 
                     //Rest of the userInfo can be stored in the SESSION variable so as to be uised throughouit the sessions on other pages too
+
                     $_SESSION["user"] = $userInfo;
-                    header("location:" . SITE_URL . "index.php");
+                    $request_url = !empty($_SESSION['request_url']) ? $_SESSION['request_url'] : SITE_URL;
+                    unset($_SESSION['request_url']); //unsetting so that new values ref other pages can be stored
+                    header("location:" .  $request_url);
                     exit();
                 } else {
                     $errors[] = "Incorrect Password!";

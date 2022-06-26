@@ -5,14 +5,21 @@ include_once "common/header.php";
 include_once "includes/db.php";
 
 if (empty($_SESSION["user"])) {
+    $currentPage = !empty($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : "";
+    $_SESSION["request_url"] = $currentpage;
     header("location:" . SITE_URL . "login.php");
     exit();
 }
+
+
+
 $userId = (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["id"])) ? $_SESSION["user"]["id"] : 0;
 
 $contactId = !empty($_GET["id"]) ? $_GET["id"] : "";
-
 //1st time It'll be blkank but next time onwards it can be used for identifying which Item to target, while editing a contact
+
+
+// Checking below that if the value is being fetched from DB, then that value will appear, else, it'll be blank so that new value can be entrered by user when he's adding a new contact in the records.
 
 if (!empty($contactId) && is_numeric($contactId)) {
     $conn = db_connect();
@@ -31,8 +38,6 @@ if (!empty($contactId) && is_numeric($contactId)) {
     $error_msg = "Invalid contact ID specified";
 }
 // print_arr($contactResult);
-
-// Checking below that if the value is being fetched from DB, then that value will appear, else, it'll be blank so that new value can be entrered by user when he's adding a new contact in the records.
 
 $first_name = (!empty($contact) && !empty($contact["first_name"])) ? $contact["first_name"] : "";
 $last_name = (!empty($contact) && !empty($contact["last_name"])) ? $contact["last_name"] : "";
@@ -94,13 +99,14 @@ $address = (!empty($contact) && !empty($contact["address"])) ? $contact["address
                                 </div>
                             </div>
 
-                            <!-- The type is set to hidden so that it will not be visible to the user, But the form tag will be also be submitting this value at submission -->
+                            <!-- The type is set to hidden so that it will not be visible to the user, The use case is that the form tag will be also be submitting this value at submission -->
                             <div class="form-group">
                                 <input type="hidden" name="contactid" value="<?php echo $contactId ?>" />
+                                <!-- This is how you transfer this value to addContact_Inputs.php file -->
                                 <!-- 1st time It'll be blkank but next time onwards it can be used for identifying while editing a contact. 
                                 Open SOurce code to see the value that this picks. This is also how the system identifies if the the new record is being added OR an old record is being modified. In case if the new record is being added, the value will always be blank
                             -->
-                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                                <button type="submit" class="btn btn-success btn-block">Submit</button>
                             </div>
                         </form>
                     </article>

@@ -46,6 +46,8 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && !empty($_SESSION["user"])) {
 
 
     $contactid = !empty($_POST["contactid"]) ? $_POST["contactid"] : "";
+    // This comes alongwith other $_POST values
+    // Will be used in sql query in the 'where' conditions
     // contactid has been picked/ referenced from 'addContact.php'
 
 
@@ -127,7 +129,6 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && !empty($_SESSION["user"])) {
     if (mysqli_query($conn, $sql)) {
         $_SESSION["success"] = $message;
         header("location:" . SITE_URL);
-
         exit();
     } else {
         echo "Error: " . "<br>" . mysqli_error($conn);

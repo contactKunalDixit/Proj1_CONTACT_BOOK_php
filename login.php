@@ -6,9 +6,9 @@ include_once "common/header.php";
     <?php require_once "common/navigation.php" ?>
     <main role="main" class="container">
         <style>
-            .wrapper {
-                padding-top: 30px;
-            }
+        .wrapper {
+            padding-top: 30px;
+        }
         </style>
 
         <div class="row justify-content-center wrapper">
@@ -34,7 +34,8 @@ include_once "common/header.php";
                             </div>
                         </form>
                     </article>
-                    <div class="border-top card-body text-center">Don't have an account? <a href="<?php echo (SITE_URL . "sign_up.php") ?>">Sign Up</a></div>
+                    <div class="border-top card-body text-center">Don't have an account? <a
+                            href="<?php echo (SITE_URL . "sign_up.php") ?>">Sign Up</a></div>
                 </div><?php
                         if (!empty($_SESSION["errors"])) {
                             echo "<div class='alert alert-danger'>";
